@@ -17,8 +17,6 @@
 <script>
 import {getParkinglots} from "../ParkingLot";
 
-const urlApi = 'https://gisn.tel-aviv.gov.il/arcgis/rest/services/IView2/MapServer/970/query?where=1%3D1&outFields=*&f=json';
-
 export default {
   name: "Parking",
   data(){
@@ -28,7 +26,7 @@ export default {
     }
   },
   mounted() {
-    getParkinglots(urlApi)
+    getParkinglots()
         .then(data => this.parkingList = data)
         .catch(e =>{
       console.error('Error!');
