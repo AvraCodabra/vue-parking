@@ -3,9 +3,12 @@
   <div v-if="parkingList">
     <ul>
       <li v-for="parklot in parkingList.slice(0,10)" :class="parklot.availability">
-        <h3>{{parklot.name}}</h3>
-        <p>{{parklot.time}}</p>
-        <p>{{parklot.status}}</p>
+<!--        <div :class="parklot.availability" href="#">-->
+          <h3>{{parklot.name}}</h3>
+          <p>{{parklot.time}}</p>
+          <p>{{parklot.status}}</p>
+          <a :href="wazeURL(parklot.location)">ניווט</a>
+<!--        </div>-->
       </li>
     </ul>
   </div>
@@ -13,7 +16,7 @@
     <h3>Loading..</h3>
   </div>
 </template>
-
+s
 <script>
 import {getParkinglots} from "../ParkingLot";
 
@@ -23,6 +26,12 @@ export default {
     return {
       title: 'Near Home Parking:',
       parkingList: null,
+      test: 'https://waze.com/ul?ll=32.0885092,34.7799810&navigate=yes'
+    }
+  },
+  methods:{
+    wazeURL: function(location){
+      return "https://waze.com/ul?ll="+location.lat+","+location.lon+"&navigate=yes";
     }
   },
   mounted() {
@@ -32,7 +41,6 @@ export default {
       console.error('Error!');
       console.log(e);
     })
-
   }
 }
 </script>
@@ -44,7 +52,7 @@ export default {
     max-width: 960px;
     margin: 20px auto;
   }
-  p,h3,ul{
+  p,h3,ul,a{
     margin: 0;
     padding: 0;
   }

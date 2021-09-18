@@ -1,17 +1,21 @@
 const ARLOZOROV_LOC = {
-    x:32.0873,
-    y:34.7737,
+    lat:32.0873,
+    lon:34.7737,
 }
 
 const ASOTA = "אסותא"
+const ASOTA_LOC = {
+    lat:32.0885092,
+    lon:34.7799810,
+}
 
 function getLocation(staticData) {
     if (staticData.Name === ASOTA){ //No location provided
         return ARLOZOROV_LOC;
     }
     return {
-        x: staticData.GPSLattitude,
-        y: staticData.GPSLongitude
+        lat: staticData.GPSLattitude,
+        lon: staticData.GPSLongitude
     };
 }
 
@@ -38,7 +42,7 @@ function getAvailability(status_chenyon) {
 }
 
 function getDist(a,b){
-    return Math.hypot(b.x-a.x, b.y-a.y);
+    return Math.hypot(b.lat-a.lat, b.lon-a.lon);
 }
 
 const stationsURL = 'https://api.tel-aviv.gov.il/parking/stations';
