@@ -35,10 +35,8 @@ function getAvailability(status_chenyon) {
         case 'מלא':
         case 'סגור':
             return 'full';
-        case 'פעיל':
-            return 'NA';
     }
-    return 'undefined'
+    return 'NA';
 }
 
 function getDist(a,b){
@@ -54,17 +52,18 @@ export async function getParkinglots(){
     const jsonStatus = await responseStatus.json();
     const jsonStatic = await response.json();
 
-    const parkingList = jsonStatus.map(data => {
+    let parkingList = jsonStatus.map(data => {
         let parkInfo = {}
         let staticData = jsonStatic.find(val => val.AhuzotCode == data.AhuzotCode)
         parkInfo.name = data.Name;
-        console.log(data.LastUpdateFromDambach)
         parkInfo.time = getTime(data.LastUpdateFromDambach);
         parkInfo.status = data.InformationToShow;
         parkInfo.availability = getAvailability(data.InformationToShow);
         parkInfo.location = getLocation(staticData);
         return parkInfo
     });
+
+    parkingList = parkingList.filter((val) =>val.availability != 'NA');
 
     //sort by location nearest to home
     parkingList.sort((a,b)=>getDist(ARLOZOROV_LOC,a.location)>getDist(ARLOZOROV_LOC,b.location) ?1:-1 );

@@ -2,13 +2,15 @@
   <h1>{{ title }}</h1>
   <div v-if="parkingList">
     <ul>
-      <li v-for="parklot in parkingList.slice(0,10)" :class="parklot.availability">
-<!--        <div :class="parklot.availability" href="#">-->
+      <li v-for="parklot in parkingList.slice(0,10)">
+        <div class="slot" :class="parklot.availability">
           <h3>{{parklot.name}}</h3>
+          <a :href="wazeURL(parklot.location)">
+            <span class="link-spanner"></span>
+          </a>
           <p>{{parklot.time}}</p>
           <p>{{parklot.status}}</p>
-          <a :href="wazeURL(parklot.location)">ניווט</a>
-<!--        </div>-->
+        </div>
       </li>
     </ul>
   </div>
@@ -56,7 +58,8 @@ export default {
     margin: 0;
     padding: 0;
   }
-  li{
+  div.slot{
+    position:relative;
     list-style-type: none;
     background: #fff;
     margin: 20px auto;
@@ -67,16 +70,35 @@ export default {
     align-items: center;
     justify-content: space-between;
   }
-  li.free{
+  /*li{*/
+  /*  list-style-type: none;*/
+  /*  background: #fff;*/
+  /*  margin: 20px auto;*/
+  /*  padding: 10px 20px;*/
+  /*  border-radius: 10px;*/
+  /*  display: flex;*/
+  /*  flex-direction: row-reverse;*/
+  /*  align-items: center;*/
+  /*  justify-content: space-between;*/
+  /*}*/
+  div.free{
     color: white;
     background: #0b9a42;
   }
-  li.almostFull{
+  div.almostFull{
     color: white;
     background: #c1a617;
   }
-  li.full{
+  div.full{
     color: white;
     background: #c22222;
+  }
+  .link-spanner{
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    left: 0;
+    z-index: 1;
   }
 </style>
