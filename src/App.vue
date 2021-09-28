@@ -10,11 +10,6 @@ export default {
   components: {
     Parking
   },
-  data() {
-    return{
-      parkOfInterest: []
-    }
-  }
 }
 </script>
 

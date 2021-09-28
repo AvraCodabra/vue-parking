@@ -18,9 +18,9 @@
     <h3>Loading..</h3>
   </div>
 </template>
-s
+
 <script>
-import {getParkinglots} from "../ParkingLot";
+import {getParkinglots, getParkingServer} from "../ParkingLot";
 
 export default {
   name: "Parking",
@@ -70,17 +70,6 @@ export default {
     align-items: center;
     justify-content: space-between;
   }
-  /*li{*/
-  /*  list-style-type: none;*/
-  /*  background: #fff;*/
-  /*  margin: 20px auto;*/
-  /*  padding: 10px 20px;*/
-  /*  border-radius: 10px;*/
-  /*  display: flex;*/
-  /*  flex-direction: row-reverse;*/
-  /*  align-items: center;*/
-  /*  justify-content: space-between;*/
-  /*}*/
   div.free{
     color: white;
     background: #0b9a42;

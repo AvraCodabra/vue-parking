@@ -1,13 +1,11 @@
+const pRetry = require('p-retry');
+
 const ARLOZOROV_LOC = {
     lat:32.0873,
     lon:34.7737,
 }
 
 const ASOTA = "אסותא"
-const ASOTA_LOC = {
-    lat:32.0885092,
-    lon:34.7799810,
-}
 
 function getLocation(staticData) {
     if (staticData.Name === ASOTA){ //No location provided
@@ -47,19 +45,66 @@ const stationsURL = 'https://api.tel-aviv.gov.il/parking/stations';
 const stationsStatus = 'https://api.tel-aviv.gov.il/parking/StationsStatus';
 
 export async function getParkinglots(){
-    const responseStatus = await fetch(stationsStatus);
-    const response = await fetch(stationsURL);
-    const jsonStatus = await responseStatus.json();
-    const jsonStatic = await response.json();
+
+    const [jsonStatus, jsonStatic] = await Promise.all([
+        fetchJason(stationsStatus),
+        fetchJason(stationsURL)
+    ]);
 
     let parkingList = jsonStatus.map(data => {
         let parkInfo = {}
-        let staticData = jsonStatic.find(val => val.AhuzotCode == data.AhuzotCode)
+        let staticData = jsonStatic.find(val => val.AhuzotCode === data.AhuzotCode)
         parkInfo.name = data.Name;
         parkInfo.time = getTime(data.LastUpdateFromDambach);
         parkInfo.status = data.InformationToShow;
         parkInfo.availability = getAvailability(data.InformationToShow);
         parkInfo.location = getLocation(staticData);
+        return parkInfo
+    });
+
+    parkingList = parkingList.filter((val) =>val.availability !== 'NA');
+
+    //sort by location nearest to home
+    parkingList.sort((a,b)=>getDist(ARLOZOROV_LOC,a.location)>getDist(ARLOZOROV_LOC,b.location) ?1:-1 );
+
+    return parkingList;
+
+}
+
+async function fetchJason(url) {
+
+    var retries = 5;
+    const response = await fetch_retry(url,retries);
+    return response.json()
+}
+
+const fetch_retry = async (url, n) => {
+    let response = await fetch(url)
+    if (!response.ok) {
+        console.log(response)
+        if (n === 1) throw "can't fatch"
+        return await fetch_retry(url, n - 1);
+    }
+    return response
+};
+
+//for v2 - using my own server
+const localStationsStatus = 'http://127.0.0.1:8000/api/liveStatus/';
+export async function getParkingServer(){
+    console.log('start')
+    const responseStatus = await fetch(localStationsStatus );
+    console.log(responseStatus)
+    const jsonStatus = await responseStatus.json();
+
+
+
+    let parkingList = jsonStatus.map(data => {
+        let parkInfo = {}
+        parkInfo.name = data.name;
+        parkInfo.time = data.statusTime;
+        parkInfo.status = data.status;
+        parkInfo.availability = getAvailability(data.status);
+        parkInfo.location = {lat:data.latitude,lon:data.longitude};
         return parkInfo
     });
 
