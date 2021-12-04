@@ -1,14 +1,14 @@
 <template>
   <h1>{{ title }}</h1>
   <div v-if="parkingList">
+    <p>last update: {{parkingList[0].time}}</p>
     <ul>
-      <li v-for="parklot in parkingList.slice(0,10)">
+      <li v-for="parklot in parkingList.slice(0,11)">
         <div class="slot" :class="parklot.availability">
           <h3>{{parklot.name}}</h3>
           <a :href="wazeURL(parklot.location)">
             <span class="link-spanner"></span>
           </a>
-          <p>{{parklot.time}}</p>
           <p>{{parklot.status}}</p>
         </div>
       </li>
@@ -57,6 +57,7 @@ export default {
   p,h3,ul,a{
     margin: 0;
     padding: 0;
+    list-style-type: none; /* Remove bullets */
   }
   div.slot{
     position:relative;
@@ -76,7 +77,7 @@ export default {
   }
   div.almostFull{
     color: white;
-    background: #c1a617;
+    background: #eec500;
   }
   div.full{
     color: white;
