@@ -8,7 +8,7 @@
                 :options="arrayOfObjects"
                 :selected="selectedArea" v-on:updateOption="methodToRunOnSelect">
       </dropdown>
-      last update: {{parkingList[0].time}}
+      updated: {{parkingList[0].time}}
     </p>
     <ul>
       <li v-for="parklot in parkingList.slice(0,11)">
