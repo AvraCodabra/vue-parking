@@ -1,11 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import VueAnalytics from 'vue-analytics';
-import router from "router";
+import VueGtag from "vue-gtag";
 
-createApp(App).mount('#app')
-
-Vue.use(VueAnalytics, {
-    id: 'G-DBXTX64G9V',
-    router
-})
+createApp(App)
+    .use(VueGtag, {config: { id: "G-DBXTX64G9V" }})
+    .mount('#app')
