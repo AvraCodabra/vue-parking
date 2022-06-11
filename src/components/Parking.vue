@@ -1,12 +1,15 @@
 <template>
   <h2>
-  <dropdown class="my-dropdown-toggle"
-            :options="arrayOfObjects"
-            :selected="selectedArea" v-on:updateOption="methodToRunOnSelect"></dropdown>
     {{ title }}
   </h2>
   <div v-if="parkingList">
-    <p>last update: {{parkingList[0].time}}</p>
+    <p>
+      <dropdown class="my-dropdown-toggle"
+                :options="arrayOfObjects"
+                :selected="selectedArea" v-on:updateOption="methodToRunOnSelect">
+      </dropdown>
+      last update: {{parkingList[0].time}}
+    </p>
     <ul>
       <li v-for="parklot in parkingList.slice(0,11)">
         <div class="slot" :class="parklot.availability">
@@ -33,7 +36,7 @@ export default {
   name: "Parking",
   data(){
     return {
-      title: ':חניונים באזור',
+      title: 'Parking To The People',
       parkingList: null,
       arrayOfObjects: [{
         name: "הצפון הישן",
@@ -100,7 +103,7 @@ export default {
     max-width: 960px;
     margin: 20px auto;
   }
-  p,h3,ul,a{
+  p,h2,h3,ul,a{
     margin: 0;
     padding: 0;
     list-style-type: none; /* Remove bullets */
