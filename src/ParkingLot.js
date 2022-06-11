@@ -48,7 +48,7 @@ function getDist(a,b){
 const stationsURL = 'https://api.tel-aviv.gov.il/parking/stations';
 const stationsStatus = 'https://api.tel-aviv.gov.il/parking/StationsStatus';
 
-export async function getParkinglots(){
+export async function getParkinglots(myLocation){
 
     const [jsonStatus, jsonStatic] = await Promise.all([
         fetchJason(stationsStatus),
@@ -69,10 +69,16 @@ export async function getParkinglots(){
     parkingList = parkingList.filter((val) =>val.availability !== 'NA');
 
     //sort by location nearest to home
-    parkingList.sort((a,b)=>getDist(HOME_LOC,a.location)>getDist(HOME_LOC,b.location) ?1:-1 );
+    //parkingList.sort((a,b)=>getDist(myLocation,a.location)>getDist(myLocation,b.location) ?1:-1 );
+
+    sortNearMe(parkingList,myLocation)
 
     return parkingList;
 
+}
+
+export function sortNearMe(parkingList, myLocation) {
+    parkingList.sort((a,b)=>getDist(myLocation,a.location)>getDist(myLocation,b.location) ?1:-1 );
 }
 
 async function fetchJason(url) {

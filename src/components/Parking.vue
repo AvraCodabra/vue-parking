@@ -1,5 +1,10 @@
 <template>
-  <h1>{{ title }}</h1>
+  <h2>
+  <dropdown class="my-dropdown-toggle"
+            :options="arrayOfObjects"
+            :selected="selectedArea" v-on:updateOption="methodToRunOnSelect"></dropdown>
+    {{ title }}
+  </h2>
   <div v-if="parkingList">
     <p>last update: {{parkingList[0].time}}</p>
     <ul>
@@ -20,24 +25,65 @@
 </template>
 
 <script>
-import {getParkinglots, getParkingServer} from "../ParkingLot";
+import {getParkinglots, sortNearMe} from "../ParkingLot";
+import dropdown from 'vue-dropdowns';
+
 
 export default {
   name: "Parking",
   data(){
     return {
-      title: 'Near Home Parking:',
+      title: ':חניונים באזור',
       parkingList: null,
-      test: 'https://waze.com/ul?ll=32.0885092,34.7799810&navigate=yes'
+      arrayOfObjects: [{
+        name: "הצפון הישן",
+        location: {
+          lat:32.0873,
+          lon:34.7737}
+      },{
+        name: "הצפון החדש",
+        location: {
+          lat:32.088825,
+          lon:34.790115}
+      },{
+        name: "לב העיר",
+        location: {
+          lat:32.067596,
+          lon:34.775948}
+      },{
+        name: "דרום העיר",
+        location: {
+          lat:32.055776,
+          lon:34.768095}
+      }],
+
+
+      selectedArea: {
+        name: "הצפון הישן",
+        location: {
+          lat:32.0873,
+          lon:34.7737}
+      }
+
     }
   },
+
+  components: {
+    'dropdown': dropdown,
+  },
+
   methods:{
     wazeURL: function(location){
       return "https://waze.com/ul?ll="+location.lat+","+location.lon+"&navigate=yes";
+    },
+    methodToRunOnSelect(payload) {
+      this.selectedArea = payload;
+
+      sortNearMe(this.parkingList,this.selectedArea.location)
     }
   },
   mounted() {
-    getParkinglots()
+    getParkinglots(this.selectedArea.location)
         .then(data => this.parkingList = data)
         .catch(e =>{
       console.error('Error!');
